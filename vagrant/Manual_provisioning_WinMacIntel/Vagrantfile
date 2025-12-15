@@ -1,10 +1,14 @@
 Vagrant.configure("2") do |config|
 
+  # ❌ Disable default VM (VERY IMPORTANT)
+  config.vm.define "default", autostart: false do |d|
+  end
+
   # Hostmanager
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
 
-  # ✅ FIX: Use VirtualBox shared folders (NO rsync needed)
+  # Shared folder fix
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 
   ### DB VM ###
@@ -37,7 +41,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  ### Tomcat / App VM ###
+  ### App VM ###
   config.vm.define "app01" do |app01|
     app01.vm.box = "centos/stream9"
     app01.vm.hostname = "app01"
@@ -47,7 +51,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  ### Nginx / Web VM ###
+  ### Web VM ###
   config.vm.define "web01" do |web01|
     web01.vm.box = "ubuntu/jammy64"
     web01.vm.hostname = "web01"
