@@ -1,58 +1,61 @@
 Vagrant.configure("2") do |config|
-  config.hostmanager.enabled = true 
+
+  # Hostmanager
+  config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
-  
-### DB vm  ####
+
+  # ✅ FIX: Use VirtualBox shared folders (NO rsync needed)
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+
+  ### DB VM ###
   config.vm.define "db01" do |db01|
     db01.vm.box = "centos/stream9"
     db01.vm.hostname = "db01"
     db01.vm.network "private_network", ip: "192.168.56.15"
     db01.vm.provider "virtualbox" do |vb|
-     vb.memory = "600"
-   end
-
+      vb.memory = "600"
+    end
   end
-  
-### Memcache vm  #### 
+
+  ### Memcache VM ###
   config.vm.define "mc01" do |mc01|
     mc01.vm.box = "centos/stream9"
     mc01.vm.hostname = "mc01"
     mc01.vm.network "private_network", ip: "192.168.56.14"
     mc01.vm.provider "virtualbox" do |vb|
-     vb.memory = "600"
-   end
+      vb.memory = "600"
+    end
   end
-  
-### RabbitMQ vm  ####
+
+  ### RabbitMQ VM ###
   config.vm.define "rmq01" do |rmq01|
     rmq01.vm.box = "centos/stream9"
     rmq01.vm.hostname = "rmq01"
     rmq01.vm.network "private_network", ip: "192.168.56.13"
     rmq01.vm.provider "virtualbox" do |vb|
-     vb.memory = "600"
-   end
+      vb.memory = "600"
+    end
   end
-  
-### tomcat vm ###
-   config.vm.define "app01" do |app01|
+
+  ### Tomcat / App VM ###
+  config.vm.define "app01" do |app01|
     app01.vm.box = "centos/stream9"
     app01.vm.hostname = "app01"
     app01.vm.network "private_network", ip: "192.168.56.12"
     app01.vm.provider "virtualbox" do |vb|
-     vb.memory = "800"
-   end
-   end
-   
-  
-### Nginx VM ###
+      vb.memory = "800"
+    end
+  end
+
+  ### Nginx / Web VM ###
   config.vm.define "web01" do |web01|
     web01.vm.box = "ubuntu/jammy64"
     web01.vm.hostname = "web01"
-  web01.vm.network "private_network", ip: "192.168.56.11"
-  web01.vm.provider "virtualbox" do |vb|
-     vb.gui = true
-     vb.memory = "800"
-   end
-end
-  
+    web01.vm.network "private_network", ip: "192.168.56.11"
+    web01.vm.provider "virtualbox" do |vb|
+      vb.gui = true
+      vb.memory = "800"
+    end
+  end
+
 end
